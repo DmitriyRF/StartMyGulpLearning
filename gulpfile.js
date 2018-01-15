@@ -6,7 +6,10 @@ var 	gulp			=		require('gulp'),
 		pump			=		require('pump'),
 		cssnano			=		require('gulp-cssnano'),
 		rename			=		require('gulp-rename'),
-		del 			=		require('del');
+		del 			=		require('del'),
+		imagemin		=		require('gulp-imagemin'),
+		pngquant		=		require('imagemin-pngquant'),
+		cache			=		require('gulp-cache');
 
 
 gulp.task(  'less-compilation', function () {
@@ -74,7 +77,7 @@ gulp.task( 'clean', function(){
 });
 
 
-gulp.task(  'build', [ 'clean', 'less-compilation', 'scripts' ], function(){
+gulp.task(  'build', [ 'clean', 'minimages', 'less-compilation', 'scripts' ], function(){
 
 	var buidCss		=	gulp.src([
 			'app/css/ending-major.min.css',
@@ -91,4 +94,21 @@ gulp.task(  'build', [ 'clean', 'less-compilation', 'scripts' ], function(){
 	var buildHtml  = gulp.src('app/*.html')
 	.pipe(  gulp.dest('dist/'));
 
+});
+
+
+		imagemin		=		require('gulp-imagemin'),
+		pngquant		=		require('imagemin-pngquant');
+
+gulp.task(	'minimages', function(){
+	return gulp.src('app/img/**/*')
+				.pipe( cache(imagemin({
+						interlaced: true,
+						progressive: true,
+						optimizationLevel: 5,
+						svgoPlugins: [{removeViewBox: true}],
+						use: [pngquant()]
+					})
+	            ))
+	            .pipe(  gulp.dest('dist/img/'));
 });
