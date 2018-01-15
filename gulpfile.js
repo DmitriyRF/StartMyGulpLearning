@@ -5,7 +5,8 @@ var 	gulp			=		require('gulp'),
 		gulpUglifyJS	=		require('gulp-uglify'),
 		pump			=		require('pump'),
 		cssnano			=		require('gulp-cssnano'),
-		rename			=		require('gulp-rename');
+		rename			=		require('gulp-rename'),
+		del 			=		require('del');
 
 
 gulp.task(  'less-compilation', function () {
@@ -62,5 +63,32 @@ gulp.task(  'css-processing', ['less-compilation'], function(){
 				.pipe(  cssnano() )
 				.pipe(  rename( {suffix: '.min'} ) )
 				.pipe(  gulp.dest('app/css/') );
+
+});
+
+
+gulp.task( 'clean', function(){
+
+	return del.sync('dist');
+
+});
+
+
+gulp.task(  'build', [ 'clean', 'less-compilation', 'scripts' ], function(){
+
+	var buidCss		=	gulp.src([
+			'app/css/ending-major.min.css',
+			'app/css/main.css'
+		])
+	.pipe(  gulp.dest('dist/css'));
+
+	var buildFonts  =  gulp.src('app/fonts/**/*')
+	.pipe(  gulp.dest(  'dist/fonts'));
+
+	var buidJs	=  gulp.src('app/js/**/*')
+	.pipe(  gulp.dest('dist/js'));
+
+	var buildHtml  = gulp.src('app/*.html')
+	.pipe(  gulp.dest('dist/'));
 
 });
