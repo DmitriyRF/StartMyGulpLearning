@@ -1,6 +1,9 @@
 var 	gulp			=		require('gulp'),
 		less			=		require('gulp-less'),
-		browserSync		=		require('browser-sync').create();
+		browserSync		=		require('browser-sync').create(),
+		concat			=		require('gulp-concat'),
+		gulpUglifyJS	=		require('gulp-uglify'),
+		pump			=		require('pump');
 
 
 gulp.task(  'less-compilation', function () {
@@ -11,7 +14,7 @@ gulp.task(  'less-compilation', function () {
 				.pipe(  browserSync.stream()  );
 });
 
-gulp.task(  'watch', ['browser-sync', 'less-compilation'], function(){
+gulp.task(  'watch', ['browser-sync', 'less-compilation', 'scripts'], function(){
 
 	gulp.watch(  './assets/less/**/*.less', ['less-compilation']  );
 
@@ -29,3 +32,26 @@ gulp.task(  'browser-sync', function(){
 		server: 'assets'
 	});
 });
+
+
+gulp.task(  'scripts', function(cb){
+
+	var minify_options =	{
+
+	};
+
+	pump([
+	      	gulp.src([
+				'app/assets/jquery/dist/jquery.js',
+				'app/assets/magnific-popup/dist/jquery.magnific-popup.js'
+			]),
+			concat( 'assets.min.js'),
+	      	gulpUglifyJS(),
+	      	gulp.dest('app/js/')
+    	],
+    	cb
+  	);
+});
+
+
+
