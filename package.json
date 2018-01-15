@@ -15,13 +15,14 @@
     "animation",
     "svg"
   ],
-  "author": "DmitriyRF", 
+  "author": "DmitriyRF",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/DmitriyRF/DmitriyRF.github.io/issues"
   },
   "homepage": "https://github.com/DmitriyRF/DmitriyRF.github.io#readme",
   "devDependencies": {
-    "gulp": "^3.9.1"
+    "gulp": "^3.9.1",
+    "gulp-less": "^3.4.0"
   }
 }
