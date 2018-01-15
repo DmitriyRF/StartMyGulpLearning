@@ -3,7 +3,9 @@ var 	gulp			=		require('gulp'),
 		browserSync		=		require('browser-sync').create(),
 		concat			=		require('gulp-concat'),
 		gulpUglifyJS	=		require('gulp-uglify'),
-		pump			=		require('pump');
+		pump			=		require('pump'),
+		cssnano			=		require('gulp-cssnano'),
+		rename			=		require('gulp-rename');
 
 
 gulp.task(  'less-compilation', function () {
@@ -14,7 +16,7 @@ gulp.task(  'less-compilation', function () {
 				.pipe(  browserSync.stream()  );
 });
 
-gulp.task(  'watch', ['browser-sync', 'less-compilation', 'scripts'], function(){
+gulp.task(  'watch', ['browser-sync', 'less-compilation', 'scripts', 'css-processing'], function(){
 
 	gulp.watch(  './assets/less/**/*.less', ['less-compilation']  );
 
@@ -54,4 +56,11 @@ gulp.task(  'scripts', function(cb){
 });
 
 
+gulp.task(  'css-processing', ['less-compilation'], function(){
 
+	return gulp.src('app/css/ending-major.css')
+				.pipe(  cssnano() )
+				.pipe(  rename( {suffix: '.min'} ) )
+				.pipe(  gulp.dest('app/css/') );
+
+});
