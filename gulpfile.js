@@ -9,13 +9,18 @@ var 	gulp			=		require('gulp'),
 		del 			=		require('del'),
 		imagemin		=		require('gulp-imagemin'),
 		pngquant		=		require('imagemin-pngquant'),
-		cache			=		require('gulp-cache');
+		cache			=		require('gulp-cache'),
+		autoprefixer	=		require('gulp-autoprefixer');
 
 
 gulp.task(  'less-compilation', function () {
 
 	return gulp.src('./assets//less/**/*.less')
 				.pipe(  less()  )
+				.pipe(  autoprefixer({
+		            browsers: ['last 5 versions'],
+		            cascade: false
+		        }))
 				.pipe(  gulp.dest('./assets/css')  )
 				.pipe(  browserSync.stream()  );
 });
@@ -62,7 +67,12 @@ gulp.task(  'scripts', function(cb){
 
 gulp.task(  'css-processing', ['less-compilation'], function(){
 
-	return gulp.src('app/css/ending-major.css')
+	return gulp.src(['app/css/ending-major.css',
+					'app/css/main.css'])
+				.pipe(autoprefixer({
+		            browsers: ['last 2 versions'],
+		            cascade: false
+		        }))
 				.pipe(  cssnano() )
 				.pipe(  rename( {suffix: '.min'} ) )
 				.pipe(  gulp.dest('app/css/') );
@@ -97,10 +107,9 @@ gulp.task(  'build', [ 'clean', 'minimages', 'less-compilation', 'scripts' ], fu
 });
 
 
-		imagemin		=		require('gulp-imagemin'),
-		pngquant		=		require('imagemin-pngquant');
 
 gulp.task(	'minimages', function(){
+
 	return gulp.src('app/img/**/*')
 				.pipe( cache(imagemin({
 						interlaced: true,
